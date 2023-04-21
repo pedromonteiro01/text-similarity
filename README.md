@@ -7,7 +7,7 @@ Development Team:
 | 98512 | Eduardo Fernandes | eduardofernandes@ua.pt |
 | 98597 | José Trigo        | josetrigo@ua.pt          |
 
-## How to run cpm program
+## How to run lang program
 Change to src folder
 ```
 cd src/
