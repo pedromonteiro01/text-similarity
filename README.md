@@ -7,7 +7,7 @@ Development Team:
 | 98512 | Eduardo Fernandes | eduardofernandes@ua.pt |
 | 98597 | José Trigo        | josetrigo@ua.pt          |
 
-## How to run lang program
+## How to run cpm program
 Change to src folder
 ```
 cd src/
@@ -15,5 +15,11 @@ cd src/
 
 Compile
 ```
-g++ -std=c++11 lang.cpp -o lang
+g++ -std=c++11 cpm.cpp -o cpm
 ```
+
+Just run the executable file with the parameters
+```
+./cpm <filename> <k> <alpha> <fail_threshold>
+```
+
