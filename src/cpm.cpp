@@ -70,6 +70,7 @@ int main(int argc, char *argv[])
         if (chunk_positions.find(current_chunk) == chunk_positions.end())
         {
             chunk_positions[current_chunk] = std::vector<int>{i};
+            estimated_bits += log2(4);
             continue;
         }
 
