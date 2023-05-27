@@ -4,6 +4,7 @@
 #include <vector>
 #include <map>
 #include <cmath>
+#include <set>
 #include <algorithm>
 using std::cout;
 using std::endl;
@@ -38,6 +39,13 @@ char predict_char(const std::vector<int> &positions, std::vector<std::string> &c
     return chunks[first_pos + 1].back();
 }
 
+// count the number of distinct characters in a string
+int count_distinct_chars(const string &str)
+{
+    std::set<char> distinct_chars(str.begin(), str.end());
+    return distinct_chars.size();
+}
+
 
 int main(int argc, char *argv[])
 {
@@ -66,6 +74,8 @@ int main(int argc, char *argv[])
     double estimated_bits = 0;
     double prob = 0;
 
+    int N = count_distinct_chars(reference_data);
+
     // create copy model using the reference data
     for (int i = 0; i < reference_data.size() - k; ++i)
     {
@@ -75,7 +85,7 @@ int main(int argc, char *argv[])
         if (chunk_positions.find(current_chunk) == chunk_positions.end())
         {
             chunk_positions[current_chunk] = std::vector<int>{i};
-            estimated_bits += log2(4);
+            estimated_bits += log2(N);
             continue;
         }
 
@@ -96,7 +106,7 @@ int main(int argc, char *argv[])
 
         if (chunk_positions.find(current_chunk) == chunk_positions.end())
         {
-            estimated_bits += log2(4);
+            estimated_bits += log2(N);
             continue;
         }
 
