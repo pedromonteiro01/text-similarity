@@ -5,6 +5,7 @@
 #include <map>
 #include <cmath>
 #include <algorithm>
+#include <set>
 #include <dirent.h>
 using namespace std;
 
@@ -24,6 +25,13 @@ string read_file(string filename)
     return data;
 }
 
+// count the number of distinct characters
+int count_distinct_chars(const string &str)
+{
+    set<char> distinct_chars(str.begin(), str.end());
+    return distinct_chars.size();
+}
+
 // predict the next char based on the previous k characters
 char predict_char(const vector<int> &positions, vector<string> &chunks)
 {
@@ -35,7 +43,7 @@ char predict_char(const vector<int> &positions, vector<string> &chunks)
 }
 
 // function to estimate bits for a given language model and target data
-double estimate_bits(map<string, vector<int>> &chunk_positions, vector<string> &chunks, string &target_data, int k, double alpha, int fail_threshold)
+double estimate_bits(map<string, vector<int>> &chunk_positions, vector<string> &chunks, string &target_data, int k, double alpha, int fail_threshold, int N)
 {
     int hits = 0;
     int fails = 0;
@@ -48,7 +56,7 @@ double estimate_bits(map<string, vector<int>> &chunk_positions, vector<string> &
 
         if (chunk_positions.find(current_chunk) == chunk_positions.end())
         {
-            estimated_bits += log2(4);
+            estimated_bits += log2(N);
             continue;
         }
 
@@ -125,6 +133,9 @@ int main(int argc, char *argv[])
             // read reference file
             string reference_data = read_file(reference_directory + "/" + reference_filename);
 
+            // calculate the number of distinct characters in the reference file
+            int N = count_distinct_chars(reference_data);
+
             // create copy model using the reference data
             map<string, vector<int>> chunk_positions;
             vector<string> chunks;
@@ -144,7 +155,7 @@ int main(int argc, char *argv[])
             }
 
             // estimate bits for this language
-            double estimated_bits = estimate_bits(chunk_positions, chunks, target_data, k, alpha, fail_threshold);
+            double estimated_bits = estimate_bits(chunk_positions, chunks, target_data, k, alpha, fail_threshold, N);
 
             // print estimated bits for this language
             cout << "Estimated total bits for " << reference_filename << ": " << estimated_bits << endl;
