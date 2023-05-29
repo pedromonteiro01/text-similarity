@@ -50,6 +50,22 @@ Just run the executable file with the parameters
 ./findlang <reference_files_directory> <target_filename> <k> <alpha> <fail_threshold>
 ```
 
+## How to run locatelang program
+Change to src folder
+```
+cd src/
+```
+
+Compile
+```
+g++ -std=c++11 locatelang.cpp -o locatelang
+```
+
+Just run the executable file with the parameters. Model type should be -c (copy model) or -f (finite context model). The segment length is the size of the subsequence to be considered inside of the target text.
+```
+./findlang <model_type> <reference_files_directory> <target_filename> <segment_length> <k> <alpha> <fail_threshold>
+```
+
 ## Example for lang
 Run the lang program with the portuguese text in langs folder (pt_PT.Portugese-latn-EP7.utf8) as reference and  the maias.txt file in examples folder as target text. First it is necessary to change to src/ folder
 ```
@@ -85,7 +101,7 @@ After that, you should compile the findlang program code
 g++ -std=c++11 findlang.cpp -o findlang
 ```
 
-Finally, just run the executable passing the langs folder (wich contain several texts in distinct languages), the target text(text to be analyzed), k (sequence size), alpha and the fails threshold.. In this case was used a text in portugues (national anthem), a k=3, alpha=1 and threshold=3
+Finally, just run the executable passing the langs folder (wich contain several texts in distinct languages), the target text(text to be analyzed), k (sequence size), alpha and the fails threshold.. In this case was used a text in portuguese (national anthem), a k=3, alpha=1 and threshold=3
 ```
 ./findlang ../langs/ ../examples/hino.txt 3 1 3
 ```
@@ -113,4 +129,27 @@ Estimated total bits for ar_XX.Arabic-wiki.utf8: 2272.36
 Estimated total bits for fr_FR.French-latn-EP7.utf8: 1096.18
 Estimated total bits for ja_JP.Japanese-wiki.utf8: 2093.43
 The text is likely to be written in pt_PT.Portugese-latn-EP7.utf8: 776.23
+```
+
+## Example for locatelang
+First it is necessary to change to src/ folder
+```
+cd src/
+```
+
+After that, you should compile the lang program code
+```
+g++ -std=c++11 locatelang.cpp -o locatelang
+```
+
+Finally, just run the executable with the model type (in this case was used the copy model, -c), reference and target filenames (locatelang.txt), k, alpha and threshold. In this case was used a segment_length=50, k=5, alpha=1 and threshold=3
+```
+./locatelang -c ../langs/ ../examples/locatelang.txt 60 5 1 3
+```
+
+This should be printed in the terminal
+```
+Segment: 0-107 is likely in pt_PT.Portugese-latn-EP7.utf8 with estimated bits: 12049
+Segment: 107-212 is likely in tr_TR.Turkish-latn-wiki.utf8 with estimated bits: 9795
+Segment: 212-313 is likely in he_IL.Hebrew-wiki.utf8 with estimated bits: 6253
 ```
