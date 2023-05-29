@@ -39,7 +39,7 @@ char predict_char(const std::vector<int> &positions, std::vector<std::string> &c
     return chunks[first_pos + 1].back();
 }
 
-// count the number of distinct characters in a string
+// count the number of distinct characters
 int count_distinct_chars(const string &str)
 {
     std::set<char> distinct_chars(str.begin(), str.end());
@@ -64,9 +64,9 @@ int main(int argc, char *argv[])
 
     // read reference and target files
     string reference_data = read_file(reference_filename);
-    string target_data = read_file(target_filename);
+    string target_data = read_file(target_filename); // text to be analyzed
 
-    // same logic as in cpm.cpp but applied to the reference data
+    // same logic as in cpm but applied to the reference data
     std::map<std::string, std::vector<int>> chunk_positions;
     std::vector<std::string> chunks;
     int hits = 0;
@@ -74,6 +74,7 @@ int main(int argc, char *argv[])
     double estimated_bits = 0;
     double prob = 0;
 
+    // get the alphabet cardinality
     int N = count_distinct_chars(reference_data);
 
     // create copy model using the reference data
@@ -99,22 +100,22 @@ int main(int argc, char *argv[])
 
     std::map<int, int> positions_count; // count consecutive fails for each position
 
-    // use the model to estimate the number of bits required to compress the target data
+    // use the reference model to estimate the number of bits required to compress the target data
     for (int i = 0; i < target_data.size() - k; ++i)
     {
         std::string current_chunk = target_data.substr(i, k);
 
         if (chunk_positions.find(current_chunk) == chunk_positions.end())
         {
-            estimated_bits += log2(N);
+            estimated_bits += log2(N); // add log2(N) when new sequencies are found
             continue;
         }
 
-        if (i + k >= target_data.size())
+        if (i + k >= target_data.size()) // check end of file
             break;
 
-        char solution = target_data[(i + k)];
-        char prediction = predict_char(chunk_positions[current_chunk], chunks);
+        char solution = target_data[(i + k)]; // get the actual char from text
+        char prediction = predict_char(chunk_positions[current_chunk], chunks); // get the predicted char from vector
 
         if (prediction == solution)
         {
@@ -128,14 +129,15 @@ int main(int argc, char *argv[])
             auto it = positions_count.find(key);
             if (it != positions_count.end())
             {
+                // check if fail for a certain position is below the threshold
                 if (it->second < fail_threshold)
                 {
                     it->second++;
                 }
                 else
                 {
-                    if (!chunk_positions[current_chunk].empty()) // Add check for empty vector
-                        chunk_positions[current_chunk].erase(chunk_positions[current_chunk].begin());
+                    if (!chunk_positions[current_chunk].empty()) // add check for empty vector
+                        chunk_positions[current_chunk].erase(chunk_positions[current_chunk].begin()); // remove first position of the array
                 }
             }
             else
@@ -146,7 +148,7 @@ int main(int argc, char *argv[])
         }
 
         prob = (hits + alpha) / (hits + fails + 2 * alpha);
-        estimated_bits += -log2(prob);
+        estimated_bits += -log2(prob); // calculate estimated bits necessary for compression
     }
 
     double total_symbols = target_data.size();
