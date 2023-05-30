@@ -63,7 +63,7 @@ g++ -std=c++11 locatelang.cpp -o locatelang
 
 Just run the executable file with the parameters. Model type should be -c (copy model) or -f (finite context model). The segment length is the size of the subsequence to be considered inside of the target text.
 ```
-./findlang <model_type> <reference_files_directory> <target_filename> <segment_length> <k> <alpha> <fail_threshold>
+./locatelang <model_type> <reference_files_directory> <target_filename> <segment_length> <k> <alpha> <fail_threshold>
 ```
 
 ## Example for lang
