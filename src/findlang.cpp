@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <set>
 #include <dirent.h>
+#include <limits>
 using namespace std;
 
 // read content of file and store it in a string
